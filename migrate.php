@@ -472,6 +472,13 @@ function post_insert($rows) {
       5 => "trash"
     ];
 
+    // Convert the MT entry_basename to a WP post_name.
+    $post_name = mb_ereg_replace("_", "-", $row["entry_basename"]);
+    // Note that if you wind up with multiple dashes in a row, it will break
+    // page links. WP replaces that with a single dash in portions of its code.
+    // So fix that problem before it happens.
+    $post_name = mb_ereg_replace("[-]+", "-", $post_name);
+
     return [
       "comment_count" => $row["entry_comment_count"],
       "comment_status" => $comment_status[$row["entry_allow_comments"]],
@@ -503,7 +510,7 @@ function post_insert($rows) {
       "post_mime_type" => "",
       // The slug for the post permalink. Important that this preserves the slug
       // for MT to allow the URLs to be consistent.
-      "post_name" => mb_ereg_replace("_", "-", $row["entry_basename"]),
+      "post_name" => $post_name,
       // MT entries don't have parents.
       "post_parent" => 0,
       // MT entries don't have passwords.
