@@ -77,7 +77,7 @@ function generateGuid($entry) {
   /*
   return "https://www.example.com"
     . date('/Y/m/', $row["entry_created_on"])
-    . mb_ereg_replace("_", "-", $row["entry_basename"])
+    . preg_replace("/_/u", "-", $row["entry_basename"])
     . "/";
   */
 }

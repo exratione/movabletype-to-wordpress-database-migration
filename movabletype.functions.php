@@ -25,20 +25,18 @@ function convertLineBreaks($content) {
   }
   */
 
-  // Regular expression to check to see what we have here at the start of a
-  // paragraph. If it starts with an HTML element, then don't wrap it.
-  $re = "^</?(h1|h2|h3|h4|h5|h6|table|ol|dl|ul|menu|dir|p|pre|center|form|fieldset|select|blockquote|address|div|hr)";
-
   $paragraphs = mb_split("(\r?\n){2,}", $content);
   $paragraphs = array_map(function ($paragraph) {
-    if (mb_ereg_match(
-        "^</?(?:h1|h2|h3|h4|h5|h6|table|ol|dl|ul|menu|dir|p|pre|center|form|fieldset|select|blockquote|address|div|hr)",
+    // Regular expression to check to see what we have here at the start of a
+    // paragraph. If it starts with an HTML element, then don't wrap it.
+    if (preg_match(
+        "/^</?(?:h1|h2|h3|h4|h5|h6|table|ol|dl|ul|menu|dir|p|pre|center|form|fieldset|select|blockquote|address|div|hr)/ui",
         $paragraph
     )) {
       return $paragraph;
     }
     else {
-      $paragraph = mb_ereg_replace("\r?\n", "<br/>\n", $paragraph);
+      $paragraph = preg_replace('/\r?\n/u', "<br/>\n", $paragraph);
       return "<p>" . $paragraph . "</p>";
     }
   }, $paragraphs);

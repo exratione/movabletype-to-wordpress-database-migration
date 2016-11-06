@@ -223,7 +223,7 @@ function category_insert($rows) {
   $term_rows = array_map(function ($row) {
     return [
       "name" => $row["category_label"],
-      "slug" => mb_ereg_replace("_", "-", $row["category_basename"]),
+      "slug" => preg_replace("/_/u", "-", $row["category_basename"]),
       // Default.
       "term_group" => 0,
       "term_id" => $row["category_id"]
@@ -473,11 +473,11 @@ function post_insert($rows) {
     ];
 
     // Convert the MT entry_basename to a WP post_name.
-    $post_name = mb_ereg_replace("_", "-", $row["entry_basename"]);
+    $post_name = preg_replace("/_/u", "-", $row["entry_basename"]);
     // Note that if you wind up with multiple dashes in a row, it will break
     // page links. WP replaces that with a single dash in portions of its code.
     // So fix that problem before it happens.
-    $post_name = mb_ereg_replace("[-]+", "-", $post_name);
+    $post_name = preg_replace("/[-]+/u", "-", $post_name);
 
     return [
       "comment_count" => $row["entry_comment_count"],
@@ -786,7 +786,7 @@ function assets_insert($rows) {
       "post_mime_type" => $row["asset_mime_type"],
       // The slug for the post permalink. Derive something appropriate from the
       // asset title.
-      "post_name" => mb_ereg_replace("[_\s]+", "-", $row["asset_label"]),
+      "post_name" => preg_replace("/[_\s]+/u", "-", $row["asset_label"]),
       // MT entries don't have parents.
       "post_parent" => 0,
       // MT entries don't have passwords.
